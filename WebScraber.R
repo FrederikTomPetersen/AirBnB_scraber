@@ -1,4 +1,7 @@
 
+
+
+
 #------------------------------------------------------------------------------------------------------------
 #
 #                                           Webscrape af AirBnB
@@ -7,52 +10,42 @@
 
 library("rvest")
 library("magrittr")
+library("dplyr")
 
 # 1) Først skal der skabes en liste over links, der skal høstes data fra
 #                       #  Listen af links skal være mulig at danne med dynamiske kriterier
 #                       #  Listen skal være udtømmelig, ikke et subsample
 
 
-search.link <- "https://www.airbnb.dk/s/Danmark/homes?refinement_paths%5B%5D=%2Fhomes&allow_override%5B%5D"
+#link til side, hvor at links skal høstes fra: 
+airbnb = html("https://www.airbnb.dk/s/Danmark/homes?refinement_paths%5B%5D=%2Fhomes&query=Danmark&allow_override%5B%5D=&s_tag=auLqOwaz")
+airbnb = html("https://www.airbnb.dk/s/Danmark/homes?refinement_paths%5B%5D=%2Fhomes&allow_override%5B%5D=&s_tag=1nQOZ1bz")
 
+test <-  airbnb %>% 
+  html_nodes("_14csrlku") %>% #noded burde indholde en attribute med et brugerid, der skal indgå i listen over links
+  html_attr() #retunere en tom liste uden fejl?!
 
-xpath = "//*[contains(concat(' ', @class, ' ' ), concat( ' ', '_1df8dftk', ' '))]"
-xpath = "div[2]/a/div[2]/div/div"
-xpath    = "._1df8dftk"
-
-._ng4pvpo
-
-respond <-  search.link %>% 
-        read_html() %>% 
-        html_nodes(css= "div a ._1yarz4r ._36rlri") %>% 
-        html_text()
-
-
-respond <- respo
-  
-  
+node = "_14csrlku" # over-node
+node = "._1df8dftk" #picturetext
+node = "._ng4pvpo" #picture alternative node
   
 
-# 2) Derefter skal CSS elementerne fra det enkelte site defineres 
-                        # Her vil vi gerne have priser oplyst
-                        # Antal reviews måned for måned
-                        # Ledige datoer
-                        # Ikke ledige datoer
-                        # Host/ ID
-                        # Total antal reviews
-                        # Superhost
-                        # Lokalitet
+airbnb = "https://www.airbnb.dk/s/Danmark/homes?refinement_paths%5B%5D=%2Fhomes&allow_override%5B%5D=&s_tag=1nQOZ1bz"
+test <-  airbnb %>% 
+  read_html() %>% 
+  html_node("_14csrlku")%>% 
+  html_attrs()
 
 
 
 
 
+# Google eksemplet virker helt fint
+google <-  html("https://news.google.com/?hl=en-US&gl=US&ceid=US%3Aen")
+test <- google %>% 
+  html_nodes(".boy4he") %>% 
+  html_attrs()
+
+test <- do.call(rbind.data.frame, test)
 
 
-read.url <- function(url, ...){
-  tmpFile <- tempfile()
-  download.file(url, destfile = tmpFile, method = "auto", mode = "wb")
-  url.data <- fread(tmpFile, ...)
-  return(url.data)
-}
-addr <- read.url(url)
